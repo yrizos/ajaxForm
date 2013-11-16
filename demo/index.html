@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ajaxForm documentation</title>
+    <script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="./../ajaxForm/ajaxForm.js"></script>
+    <script>
+        $(document).ready(function () {
+            var responseBox = $("#response-box");
+
+            $("form").ajaxForm({
+                beforeSend: function () {
+                    $(responseBox).text("");
+                },
+                success: function (response) {
+                    $(responseBox).text(response);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $(responseBox).text("Oops: " + errorThrown);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <p>JSON response</p>
+
+    <form action="response.json" method="post" data-dataType="json">
+        <input type="text" name="field1">
+        <button type="submit">Send</button>
+    </form>
+    <hr/>
+
+    <p>HTML response</p>
+
+    <form action="response.html" method="post" data-dataType="html">
+        <input type="text" name="field1">
+        <button type="submit">Send</button>
+    </form>
+    <hr/>
+
+    <p>Will fail</p>
+
+    <form action="missing" method="post">
+        <input type="text" name="field1">
+        <button type="submit">Send</button>
+    </form>
+    <hr/>
+
+    <p>Response:</p>
+
+    <div id="response-box"></div>
+</body>
+</html>
