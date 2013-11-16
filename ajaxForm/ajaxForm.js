@@ -8,7 +8,7 @@
             var $form = $(this);
 
             dataType = $form.attr("data-dataType");
-            if (dataType !== undefined) settings.dataType = dataType;
+            if (typeof dataType != "undefined") dataType = settings.dataType;
 
             $form.on("submit", function (event) {
                 event.preventDefault();
@@ -18,7 +18,7 @@
                     url: $form.attr("action"),
                     data: $form.serialize(),
                     cache: false,
-                    dataType: settings.dataType,
+                    dataType: dataType,
                     beforeSend: function () {
                         $form.addClass("ajaxForm-loading");
 

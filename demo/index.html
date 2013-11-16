@@ -9,14 +9,12 @@
             var responseBox = $("#response-box");
 
             $("form").ajaxForm({
-                beforeSend: function () {
-                    $(responseBox).text("");
-                },
+                dataType: "html",
                 success: function (response) {
-                    $(responseBox).text(response);
+                    console.log(response);
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    $(responseBox).text("Oops: " + errorThrown);
+                    console.log("Oops: " + errorThrown);
                 }
             });
         });
@@ -34,7 +32,7 @@
 
     <p>HTML response</p>
 
-    <form action="response.html" method="post" data-dataType="html">
+    <form action="response.html" method="post">
         <input type="text" name="field1">
         <button type="submit">Send</button>
     </form>
@@ -46,10 +44,5 @@
         <input type="text" name="field1">
         <button type="submit">Send</button>
     </form>
-    <hr/>
-
-    <p>Response:</p>
-
-    <div id="response-box"></div>
 </body>
 </html>
