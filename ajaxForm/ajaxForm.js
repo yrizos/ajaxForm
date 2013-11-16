@@ -6,8 +6,9 @@
 
         return this.each(function () {
             var $form = $(this);
+
             dataType = $form.attr("data-dataType");
-            if (dataType != undefined) settings.dataType = dataType;
+            if (dataType !== undefined) settings.dataType = dataType;
 
             $form.on("submit", function (event) {
                 event.preventDefault();
