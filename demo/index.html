@@ -13,6 +13,9 @@
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     console.log("Oops: " + errorThrown);
+                },
+                complete: function () {
+                    console.log("Done.");
                 }
             });
         });

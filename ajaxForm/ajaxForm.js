@@ -1,55 +1,46 @@
 (function ($) {
 
     $.fn.ajaxForm = function (options) {
+        options = $.extend({}, $.fn.ajaxForm.defaults, options);
 
-        var settings = $.extend({}, $.fn.ajaxForm.defaults, options);
+        function callHandler(name, form, arguments) {
+            if (typeof options[name] === "function") {
+                options[name].apply(form, [].slice.call(arguments, 0));
+            }
+        }
 
-        return this.each(function () {
-            var $form = $(this);
+        return this.filter("form").each(function () {
+            var settings, form = this;
 
-            dataType = $form.attr("data-dataType");
-            if (typeof dataType != "undefined") dataType = settings.dataType;
+            settings = $.extend({}, {
+                url: $(this).prop("action"),
+                type: $(this).prop("method"),
+                data: $(this).serialize()
+            }, options);
 
-            $form.on("submit", function (event) {
+            dataType = $(this).attr("data-dataType");
+            if (typeof dataType === "string") {
+                settings.dataType = dataType;
+            }
+
+            settings.beforeSend = function () {
+                $(this).addClass("ajaxForm-loading");
+                callHandler("beforeSend", form, arguments);
+            };
+
+            settings.complete = function () {
+                $(this).removeClass("ajaxForm-loading");
+                callHandler("complete", form, arguments);
+            };
+
+            $(this).on("submit", function (event) {
                 event.preventDefault();
 
-                $.ajax({
-                    type: $form.attr("method"),
-                    url: $form.attr("action"),
-                    data: $form.serialize(),
-                    cache: false,
-                    dataType: dataType,
-                    beforeSend: function () {
-                        $form.addClass("ajaxForm-loading");
-
-                        if (typeof settings.beforeSend == "function") settings.beforeSend.call($form);
-                    },
-                    complete: function () {
-                        $form.removeClass("ajaxForm-loading");
-
-                        if (typeof settings.complete == "function") settings.complete.call($form);
-                    },
-                    success: function (response) {
-                        if (typeof settings.success == "function") settings.success.call($form, response);
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        if (typeof settings.error == "function") settings.error.call($form, XMLHttpRequest, textStatus, errorThrown);
-                    }
-                });
+                $.ajax(settings);
             });
         });
     };
 
-    $.fn.ajaxForm.defaults = {
-        dataType: "json",
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
-        success: function () {
-        },
-        error: function () {
-        }
-    };
+    $.fn.ajaxForm.defaults = {};
 
 })(jQuery);
