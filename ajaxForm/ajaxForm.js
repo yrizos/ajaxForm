@@ -1,16 +1,18 @@
 (function ($) {
 
+    "use strict";
+
     $.fn.ajaxForm = function (options) {
         options = $.extend({}, $.fn.ajaxForm.defaults, options);
 
-        function callHandler(name, form, arguments) {
+        function callHandler(name, form, args) {
             if (typeof options[name] === "function") {
-                options[name].apply(form, [].slice.call(arguments, 0));
+                options[name].apply(form, [].slice.call(args, 0));
             }
         }
 
         return this.filter("form").each(function () {
-            var settings, form = this;
+            var settings, dataType, form = this;
 
             settings = $.extend({}, {
                 url: $(this).prop("action"),
